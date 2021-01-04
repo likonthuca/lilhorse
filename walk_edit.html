@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- keybroad function to be copy ed -->
+<!-- 20201214 need to fix the size of divs, maybe in css -->
+<!-- 20210103 adapt 8 direction move at the same time (samplev3) (test failed) -->
+<!-- 20210104 combine moveLeft() and stepLeft(); to add var moveDistance, var vid -->
+<!-- written by lktc -->
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title> javascript control character move v1.0.1 </title>
+<!-- import sources -->
+<!-- <link rel="stylesheet" type="text/css" href=""> -->
+
+<!-- addition styles -->
+<style>
+/* fonts setting */
+@font-face
+{
+	font-family: myFirstFont;
+    src: url('jackeyfont.ttf')
+}
+*{
+    font-family:myFirstFont;
+}
+/* page default */
+body {
+	background-color:green;
+	background-image: url(images/landgrass.png)
+}
+
+/* img.plyr {} */
+
+</style>
+</head>
+
+<!-- load jquery.js base -->
+<script src="js/jquery-1.10.2.min.js">
+</script>
+
+
+<body>
+	<div style="color:snow">
+		<h1>Current Time On Earth(524):
+			<br/>
+			<p id="jsdate"> </p>
+		</h1>
+	</div>
+	<div>
+		<img class="plyr" id="im">
+	</div>
+<script>
+	$(document).ready(function(){
+
+		// start default image
+		$("img.plyr").attr("src","images/l0.png");
+		$("img.plyr").css("background-image","url(images/shdwlr.png)");
+		$("img.plyr").css("position","absolute");
+		// $("img.plyr").css("top","300px");
+		// $("img.plyr").css("left","500px");
+
+		$("*").keydown(function(event){
+				switch(event.which){
+					case(87):moveUp(); // W
+					break;
+					case(65):moveLeft(); // A
+					break;
+					case(83):moveDown(); // S
+					break;
+					case(68):moveRight(); // D
+					break;
+					case(13): // ENTER
+					moveStop();
+					clearInterval(rlc);
+					break;
+				}
+		});
+
+
+
+		$("*").keyup(function(){
+				switch(event.which){
+					// case(13): // ENTER for test
+					case(87): // W
+					case(65): // A
+					case(83): // S
+					case(68): // D
+					moveStop();
+					break;
+
+				}
+		})
+	});
+	
+	rlc = setInterval (moveRandom,500);
+	function moveRandom(){
+		var rdval = Math.random();
+		if (rdval<0.2){
+			moveUp();
+		}
+		else if (rdval<0.4){
+			moveLeft();
+		}
+		else if (rdval<0.6){
+			moveDown();
+		}
+		else if (rdval<0.8){
+			moveRight();
+		}
+		else{
+			moveStop();
+		}
+	};
+
+
+		// PART 1 VAR
+		var i = 0, clc = null, flage;
+		var moveSpeed = 30;
+		var moveDistance = 10;
+
+		var images = document.getElementById('im');
+		var imagesStyleTop = '300px';
+		var imagesStyleLeft = '500px';
+
+		// PART 2 STYLE SETTS
+		// 300*500 
+		// images.style.top = '300px';
+		images.style.top = imagesStyleTop;
+		// images.style.left = '500px';
+		images.style.left = imagesStyleLeft;
+
+		// PART 3 FX
+		// function moveArea(){
+		// 	if ($("img.plyr").css("left") < 0) {}
+		// }
+
+
+		function moveStop(){
+			switch(flage){
+				case 1: images.src = 'images/u0.png';break;	// up
+				case 2: images.src = 'images/d0.png';break; // down
+				case 3: images.src = 'images/l0.png';break; // left
+				case 4: images.src = 'images/r0.png';break; // right
+				// case 5: images.src = 'images/ru0.png';break; // right-up
+				// case 6: images.src = 'images/rd0.png';break; // right-down
+				// case 7: images.src = 'images/ld0.png';break; // left-down
+				// case 8: images.src = 'images/lu0.png';break; // left-up
+			}
+			clearInterval(clc);
+		}
+		
+		function moveUp(){
+			$("img.plyr").css("background-image","url(images/shdwud.png)"); // add shadow
+			i = 0;
+			clearInterval(clc);
+			clc = setInterval(function(){
+				i++;
+				i = i % 4;
+				var name ="images/u" + i + "." + "png";
+				images.src = name;
+				images.style.top = parseInt(images.style.top) - moveDistance + 'px';
+				flage = 1;
+			},moveSpeed);
+		}
+
+		function moveDown(){
+			$("img.plyr").css("background-image","url(images/shdwud.png)"); // add shadow
+			i = 0;
+			clearInterval(clc);
+			clc = setInterval(function(){
+				i++;
+				i = i % 4;
+				var name ="images/d" + i + "." + "png";
+				images.src = name;
+				images.style.top = parseInt(images.style.top) + moveDistance + 'px';
+				flage = 2;
+			},moveSpeed);
+		}
+
+		function moveLeft(){
+			$("img.plyr").css("background-image","url(images/shdwlr.png)"); // add shadow
+			i = 0, i++;
+			clearInterval(clc);
+			clc = setInterval(function(){
+				i++;
+				i = i % 4;
+				var name ="images/l" + i + "." + "png";
+				images.src = name;
+				images.style.left = parseInt(images.style.left) - moveDistance + 'px';
+				flage = 3;
+			},moveSpeed); // walk speed
+		}
+
+		function moveRight(){
+			$("img.plyr").css("background-image","url(images/shdwlr.png)"); // add shadow
+			i = 0;
+			clearInterval(clc);
+			clc = setInterval(function(){
+				i++;
+				i = i % 4;
+				var name ="images/r" + i + "." + "png";
+				images.src = name;
+				images.style.left = parseInt(images.style.left) + moveDistance + 'px';
+				flage = 4;
+			},moveSpeed);
+		}
+
+
+		// //向右上
+		// oRightUp.onclick = function(){
+		// 	i = 0;
+		// 	clearInterval(clc);
+		// 	clc = setInterval("goRightUp(i++);", 100);
+		// }
+		// function goRightUp(){
+		// 	i = i % 4;
+		// 	var name ="images/rightUp-" + i + "." + "png";
+		// 	images.src = name;
+		// 	images.style.left = parseInt(images.style.left) + 10 + 'px';
+		// 	images.style.top = parseInt(images.style.top) - 10 + 'px';
+		// 	flage = 5;
+		// }
+
+
+
+
+
+		// //向右下
+		// oRightDown.onclick = function(){
+		// 	i = 0;
+		// 	clearInterval(clc);
+		// 	clc = setInterval("goRightDown(i++);", 100);
+		// }
+		// function goRightDown(){
+		// 	i = i % 4;
+		// 	var name ="images/rd-" + i + "." + "png";
+		// 	images.src = name;
+		// 	images.style.left = parseInt(images.style.left) + 10 + 'px';
+		// 	images.style.top = parseInt(images.style.top) + 10 + 'px';
+		// 	flage = 6;
+		// }
+		// //向左下
+		// oLeftDown.onclick = function(){
+		// 	i = 0;
+		// 	clearInterval(clc);
+		// 	clc = setInterval("goLeftDown(i++);", 100);
+		// }
+		// function goLeftDown(){
+		// 	i = i % 4;
+		// 	var name ="images/ld-" + i + "." + "png";
+		// 	images.src = name;
+		// 	images.style.left = parseInt(images.style.left) - 10 + 'px';
+		// 	images.style.top = parseInt(images.style.top) + 10 + 'px';
+		// 	flage = 7;
+		// }
+		// //向左上
+		// oLeftUp.onclick = function(){
+		// 	i = 0;
+		// 	clearInterval(clc);
+		// 	clc = setInterval("goLeftUp(i++);", 100);
+		// }
+		// function goLeftUp(){
+		// 	i = i % 4;
+		// 	var name ="images/lu-" + i + "." + "png";
+		// 	images.src = name;
+		// 	images.style.left = parseInt(images.style.left) - 10 + 'px';
+		// 	images.style.top = parseInt(images.style.top) - 10 + 'px';
+		// 	flage = 8;
+		// }
+	</script>
+	<!-- show time function -->
+	<!-- note: put function at the end of body to avoid if target element is not loaded yet. -->
+	<script src="./js/jsdate-1.1.js"></script>
+
+
+</body></html>
